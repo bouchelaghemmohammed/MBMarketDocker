@@ -4,7 +4,6 @@ services:
     env: docker
     plan: free
     rootDir: backend
-    dockerfilePath: ./Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
@@ -20,7 +19,6 @@ services:
     env: docker
     plan: free
     rootDir: frontend
-    dockerfilePath: ./Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
