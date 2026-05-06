@@ -1,0 +1,124 @@
+<div
+  class="container animate-fade-in"
+  style="padding-top: 40px; padding-bottom: 60px; max-width: 1000px"
+>
+  <button
+    class="btn-secondary"
+    (click)="goBack()"
+    style="
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    "
+  >
+    ← Go Back
+  </button>
+
+  <div
+    *ngIf="loading"
+    style="text-align: center; padding: 60px; color: var(--text-muted)"
+  >
+    Loading product details...
+  </div>
+
+  <div *ngIf="!loading && product" class="glass-panel detail-grid">
+    <!-- Left: Image -->
+    <div class="detail-image-wrap">
+      <img
+        *ngIf="product.imageUrl; else placeholder"
+        [src]="product.imageUrl"
+        alt="{{ product.name }}"
+      />
+      <ng-template #placeholder>
+        <span class="detail-placeholder">BM</span>
+      </ng-template>
+    </div>
+
+    <!-- Right: Details -->
+    <div class="detail-info">
+      <span class="detail-category">{{ product.category }}</span>
+      <h2 class="detail-name">{{ product.name }}</h2>
+      <div class="detail-price">${{ product.price }}</div>
+      <p class="detail-description">{{ product.description }}</p>
+
+      <div class="detail-stock-row">
+        <span
+          class="stock-indicator"
+          [class.stock-ok]="product.stock >= 5"
+          [class.stock-low]="product.stock > 0 && product.stock < 5"
+          [class.stock-none]="product.stock === 0"
+        >
+          {{ product.stock > 0 ? product.stock + " in stock" : "Out of Stock" }}
+        </span>
+        <span *ngIf="product.sellerId" class="seller-info">
+          Sold by:
+          <span class="seller-name">{{ product.sellerId.username }}</span>
+        </span>
+      </div>
+
+      <div
+        *ngIf="
+          product.stock > 0 &&
+          (!currentUser || currentUser._id !== product.sellerId?._id)
+        "
+        class="add-cart-row"
+      >
+        <div class="qty-stepper">
+          <button
+            type="button"
+            (click)="quantity = quantity > 1 ? quantity - 1 : 1"
+          >
+            −
+          </button>
+          <input
+            type="number"
+            [(ngModel)]="quantity"
+            min="1"
+            [max]="product.stock"
+          />
+          <button
+            type="button"
+            (click)="
+              quantity = quantity < product.stock ? quantity + 1 : product.stock
+            "
+          >
+            +
+          </button>
+        </div>
+        <button
+          class="btn-primary"
+          style="flex: 1; font-size: 1rem"
+          (click)="addToCart()"
+        >
+          🛒 Add to Cart
+        </button>
+      </div>
+
+      <div
+        *ngIf="
+          product.sellerId &&
+          (!currentUser || currentUser._id !== product.sellerId._id)
+        "
+        style="margin-top: 4px"
+      >
+        <button
+          class="btn-secondary w-100"
+          style="border-color: var(--primary); color: var(--primary)"
+          (click)="messageSeller()"
+        >
+          💬 Contact Seller
+        </button>
+      </div>
+
+      <div
+        *ngIf="currentUser && currentUser._id === product.sellerId?._id"
+        class="owner-banner"
+        style="margin-top: 4px"
+      >
+        You are the owner of this product.<br />
+        Manage it in <a routerLink="/my-products">My Products</a>.
+      </div>
+    </div>
+  </div>
+</div>

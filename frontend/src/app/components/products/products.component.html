@@ -1,0 +1,131 @@
+<div
+  class="container animate-fade-in"
+  style="padding-top: 40px; padding-bottom: 40px"
+>
+  <div class="page-header" style="text-align: center; margin-bottom: 40px">
+    <h2>Discover Products</h2>
+    <p style="color: var(--text-muted); margin-top: 10px">
+      Find exactly what you're looking for.
+    </p>
+  </div>
+
+  <!-- Filters -->
+  <div
+    class="glass-panel"
+    style="
+      margin-bottom: 30px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 20px;
+    "
+  >
+    <div style="flex: 1">
+      <input
+        type="text"
+        class="input-control"
+        placeholder="Search for products..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="applyFilters()"
+        style="margin-bottom: 0"
+      />
+    </div>
+    <div style="flex: 1; max-width: 300px">
+      <select
+        class="input-control"
+        [(ngModel)]="selectedCategory"
+        (ngModelChange)="applyFilters()"
+        style="margin-bottom: 0"
+      >
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="grid-cards">
+    <div
+      class="glass-panel product-card animate-fade-in"
+      *ngFor="let product of filteredProducts"
+      (click)="viewDetails(product._id)"
+      style="
+        cursor: pointer;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      "
+    >
+      <div class="product-img-container">
+        <img
+          *ngIf="product.imageUrl; else placeholder"
+          [src]="product.imageUrl"
+          alt="{{ product.name }}"
+          class="product-img"
+        />
+        <ng-template #placeholder>
+          <div class="img-placeholder text-gradient">BM</div>
+        </ng-template>
+        <span class="category-badge">{{ product.category }}</span>
+      </div>
+
+      <div class="product-details">
+        <h3 class="product-title">{{ product.name }}</h3>
+        <p
+          class="product-desc"
+          style="
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          "
+        >
+          {{ product.description }}
+        </p>
+
+        <div
+          class="product-meta"
+          style="
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+          "
+        >
+          <span class="product-price" style="font-size: 1.25rem"
+            >${{ product.price }}</span
+          >
+          <span class="product-stock" [class.low-stock]="product.stock < 5"
+            >{{ product.stock }} left</span
+          >
+        </div>
+
+        <button class="btn-primary w-100" style="margin-top: 15px">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredProducts.length === 0" class="empty-state glass-panel">
+    <h3>No products found</h3>
+    <p>Try adjusting your search or category filter.</p>
+    <button
+      class="btn-secondary"
+      style="margin-top: 15px"
+      (click)="searchQuery = ''; selectedCategory = ''; applyFilters()"
+    >
+      Clear Filters
+    </button>
+  </div>
+</div>
+
+<!-- Scroll to top button -->
+<button
+  *ngIf="showScrollTop"
+  class="scroll-top-btn"
+  (click)="scrollToTop()"
+  title="Back to top"
+  aria-label="Scroll to top"
+>
+  ↑
+</button>

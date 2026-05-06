@@ -1,0 +1,150 @@
+﻿/* ===== Page Layout ===== */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+/* ===== Product Card ===== */
+.product-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.2);
+}
+
+.product-img-container {
+  height: 180px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.04);
+}
+
+.img-placeholder {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.6;
+}
+
+.category-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ===== Product Info ===== */
+.product-details {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0;
+}
+
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.product-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.product-stock {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: rgba(100, 116, 139, 0.1);
+  padding: 3px 9px;
+  border-radius: 12px;
+}
+
+.low-stock {
+  color: var(--accent);
+  background: rgba(244, 63, 94, 0.1);
+}
+
+/* ===== Add/Edit Modal Form ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid > * {
+    grid-column: span 1 !important;
+  }
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  padding: 64px 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  max-width: 400px;
+  margin: 0 auto 20px;
+}
+
+/* ===== Utility ===== */
+.w-100 {
+  width: 100%;
+}

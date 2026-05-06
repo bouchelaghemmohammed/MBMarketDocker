@@ -1,0 +1,136 @@
+/* ============================================
+   PROFILE PAGE
+   ============================================ */
+
+.profile-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+/* ===== Hero / Avatar Header ===== */
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), 0 6px 20px rgba(59, 130, 246, 0.25);
+}
+
+.profile-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 4px;
+}
+
+.profile-subtitle {
+  font-size: 0.87rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ===== Alert messages ===== */
+.alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.alert-error {
+  background: rgba(244, 63, 94, 0.12);
+  color: #e11d48;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+/* ===== Cards ===== */
+.profile-card {
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optional-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ===== Save button ===== */
+.btn-save {
+  width: 100%;
+  padding: 13px;
+  font-size: 1rem;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .profile-page {
+    padding: 24px 16px 48px;
+  }
+
+  .profile-hero {
+    padding: 20px;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

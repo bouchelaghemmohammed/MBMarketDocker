@@ -1,0 +1,74 @@
+<div class="container animate-fade-in" style="padding-top: 40px; padding-bottom: 40px;">
+  <div class="page-header">
+    <h2>Messages</h2>
+  </div>
+
+  <div class="glass-panel" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; padding: 0; min-height: 600px; overflow: hidden;">
+    
+    <!-- Contacts Sidebar -->
+    <div style="border-right: 1px solid var(--border); background: rgba(255,255,255,0.3);">
+      <div style="padding: 20px; border-bottom: 1px solid var(--border); font-weight: bold; color: var(--text-muted);">
+        Conversations
+      </div>
+      
+      <div style="overflow-y: auto; height: calc(100% - 60px);">
+        <div *ngIf="contacts.length === 0" style="padding: 20px; color: var(--text-muted); text-align: center; font-size: 0.9rem;">
+          No users available.
+        </div>
+        
+        <div *ngFor="let contact of contacts" 
+             (click)="selectContact(contact)"
+             style="padding: 15px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); cursor: pointer; transition: all 0.2s;"
+             [style.background]="selectedContact?._id === contact._id ? 'var(--border)' : 'transparent'">
+          <div style="font-weight: 600; color: var(--primary);">{{ contact.username }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Click to chat</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div style="display: flex; flex-direction: column; height: 100%;">
+      
+      <div *ngIf="!selectedContact" style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+        Select a conversation to start messaging.
+      </div>
+
+      <ng-container *ngIf="selectedContact">
+        <!-- Chat Header -->
+        <div style="padding: 20px; border-bottom: 1px solid var(--border); font-weight: bold; display: flex; align-items: center; gap: 10px;">
+          <div class="img-placeholder" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ selectedContact.username.charAt(0) | uppercase }}</div>
+          {{ selectedContact.username }}
+        </div>
+
+        <!-- Messages list -->
+        <div id="chat-messages-container" style="flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+          <div *ngIf="messages.length === 0" style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 20px;">
+            No messages yet. Send a message to start the conversation!
+          </div>
+
+          <div *ngFor="let msg of messages" 
+               style="max-width: 70%; padding: 10px 15px; border-radius: 12px; position: relative;"
+               [style.align-self]="msg.senderId._id === currentUser._id ? 'flex-end' : 'flex-start'"
+               [style.background]="msg.senderId._id === currentUser._id ? 'linear-gradient(135deg, var(--primary), var(--secondary))' : 'rgba(255,255,255,0.9)'"
+               [style.color]="msg.senderId._id === currentUser._id ? 'white' : 'var(--text-main)'"
+               [style.border]="msg.senderId._id === currentUser._id ? 'none' : '1px solid var(--border)'">
+            
+            <div style="font-size: 0.95rem;">{{ msg.content }}</div>
+            <div style="font-size: 0.7rem; text-align: right; margin-top: 5px; opacity: 0.7;">
+              {{ msg.createdAt | date:'shortTime' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div style="padding: 20px; border-top: 1px solid var(--border); background: rgba(255,255,255,0.4);">
+          <form (ngSubmit)="sendMessage()" style="display: flex; gap: 10px;">
+            <input type="text" name="newMessage" class="input-control" [(ngModel)]="newMessage" placeholder="Type your message..." autocomplete="off" style="margin-bottom: 0;">
+            <button type="submit" class="btn-primary" [disabled]="!newMessage.trim()">Send</button>
+          </form>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+﻿<!-- Modal — placed BEFORE the container so position:fixed is never affected by a parent transform/animation -->
+<div *ngIf="showAddForm" class="modal-overlay">
+  <div class="modal-content animate-fade-in" style="max-width: 620px; width: 95%; max-height: 92vh; overflow-y: auto">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; border-bottom:1px solid var(--border); padding-bottom:14px;">
+      <h3 style="margin:0; font-size:1.2rem">{{ isEditing ? "✏️ Edit Product" : "📦 New Product" }}</h3>
+      <button (click)="toggleAddForm()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted); line-height:1; padding:4px 8px; border-radius:6px; transition:background 0.2s;" onmouseenter="this.style.background='rgba(0,0,0,0.06)'" onmouseleave="this.style.background='none'">&times;</button>
+    </div>
+    <form (ngSubmit)="addProduct()" #productForm="ngForm" class="form-grid">
+      <div class="input-group">
+        <label>Name</label>
+        <input type="text" name="name" class="input-control" [(ngModel)]="newProduct.name" required placeholder="Product name" />
+      </div>
+      <div class="input-group">
+        <label>Category</label>
+        <select name="category" class="input-control" [(ngModel)]="newProduct.category" required>
+          <option value="" disabled selected>Select a category</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+      <div class="input-group" *ngIf="newProduct.category === 'Other'">
+        <label>Specify Category</label>
+        <input type="text" name="customCategory" class="input-control" [(ngModel)]="customCategory" required placeholder="e.g. Furniture" />
+      </div>
+      <div class="input-group">
+        <label>Price ($)</label>
+        <input type="number" name="price" class="input-control" [(ngModel)]="newProduct.price" required min="0.01" step="0.01" placeholder="0.00" />
+      </div>
+      <div class="input-group">
+        <label>Stock Quantity</label>
+        <input type="number" name="stock" class="input-control" [(ngModel)]="newProduct.stock" required min="0" placeholder="0" />
+      </div>
+      <div class="input-group" style="grid-column: span 2">
+        <label>Image URL <span style="color:var(--text-muted); font-weight:400">(Optional)</span></label>
+        <input type="text" name="imageUrl" class="input-control" [(ngModel)]="newProduct.imageUrl" placeholder="https://..." />
+      </div>
+      <div class="input-group" style="grid-column: span 2">
+        <label>Description</label>
+        <textarea name="description" class="input-control" [(ngModel)]="newProduct.description" required rows="3" placeholder="Describe your product..."></textarea>
+      </div>
+      <div style="grid-column: span 2; display:flex; gap:12px; margin-top:8px">
+        <button type="button" class="btn-secondary w-100" (click)="toggleAddForm()">Cancel</button>
+        <button type="submit" class="btn-primary w-100" [disabled]="!productForm.form.valid || loading">
+          {{ loading ? "Saving..." : isEditing ? "Save Changes" : "Create Product" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Page Content -->
+<div class="container animate-fade-in" style="padding-top: 40px; padding-bottom: 60px">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h2>My Products</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px">Manage your inventory</p>
+    </div>
+    <button class="btn-primary" (click)="toggleAddForm()">+ Add Product</button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div *ngIf="products.length > 0" style="display:flex; gap:16px; margin-bottom:32px; flex-wrap:wrap">
+    <div class="glass-panel" style="padding:16px 24px; flex:1; min-width:140px; text-align:center">
+      <div style="font-size:1.8rem; font-weight:800; color:var(--primary)">{{ products.length }}</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px">Total Products</div>
+    </div>
+    <div class="glass-panel" style="padding:16px 24px; flex:1; min-width:140px; text-align:center">
+      <div style="font-size:1.8rem; font-weight:800; color:#10b981">{{ getInStockCount() }}</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px">In Stock</div>
+    </div>
+    <div class="glass-panel" style="padding:16px 24px; flex:1; min-width:140px; text-align:center">
+      <div style="font-size:1.8rem; font-weight:800; color:var(--accent)">{{ getOutOfStockCount() }}</div>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px">Out of Stock</div>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="grid-cards">
+    <div class="glass-panel product-card animate-fade-in" *ngFor="let product of products" [style.opacity]="product.stock === 0 ? '0.65' : '1'">
+      <div class="product-img-container">
+        <img *ngIf="product.imageUrl; else placeholder" [src]="product.imageUrl" alt="{{ product.name }}" class="product-img" />
+        <ng-template #placeholder><div class="img-placeholder">BM</div></ng-template>
+        <span class="category-badge" [style.background]="product.stock === 0 ? 'var(--accent)' : 'var(--primary)'">
+          {{ product.stock === 0 ? "OUT OF STOCK" : product.category }}
+        </span>
+      </div>
+      <div class="product-details">
+        <h3 class="product-title">{{ product.name }}</h3>
+        <div class="product-meta">
+          <span class="product-price">{{ product.price | price }}</span>
+          <span class="product-stock" [class.low-stock]="product.stock < 5">Qty: {{ product.stock }}</span>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:14px">
+          <button class="btn-secondary w-100" (click)="editProduct(product)" style="font-size:0.88rem">✏️ Edit</button>
+          <button class="btn-secondary w-100" style="color:var(--accent); border-color:rgba(244,63,94,0.35); font-size:0.88rem" (click)="deleteProduct(product._id)">🗑️ Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="products.length === 0" class="empty-state glass-panel">
+    <div style="font-size:3rem; margin-bottom:16px">📦</div>
+    <h3>No products yet</h3>
+    <p>Start selling by adding your first product.</p>
+    <button class="btn-primary" style="margin-top:8px" (click)="toggleAddForm()">+ Add Your First Product</button>
+  </div>
+</div>

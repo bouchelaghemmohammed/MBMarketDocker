@@ -1,0 +1,74 @@
+<app-navbar></app-navbar>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="footer-logo"><span class="logo-bm">BM</span>Market</span>
+        <p class="footer-tagline">The next-generation marketplace platform.</p>
+      </div>
+      <div class="footer-tech">
+        <p class="footer-section-label">Built with</p>
+        <div class="tech-badges">
+          <span class="tech-badge tech-angular">Angular 17</span>
+          <span class="tech-badge tech-node">Node.js</span>
+          <span class="tech-badge tech-express">Express.js</span>
+          <span class="tech-badge tech-mongo">MongoDB</span>
+          <span class="tech-badge tech-socket">Socket.io</span>
+          <span class="tech-badge tech-ts">TypeScript</span>
+          <span class="tech-badge tech-jwt">JWT Auth</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        © 2026 <strong>BOUCHELAGHEM MOHAMMED</strong> — All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<div
+  *ngIf="notificationMessage"
+  class="toast animate-fade-in"
+  style="background: var(--primary)"
+>
+  🔔 {{ notificationMessage }}
+</div>
+
+<div
+  *ngIf="toastMessage"
+  class="toast animate-fade-in"
+  [ngStyle]="{
+    background:
+      toastMessage.type === 'success'
+        ? '#10b981'
+        : toastMessage.type === 'error'
+          ? '#f43f5e'
+          : 'var(--primary)',
+  }"
+>
+  {{ toastMessage.message }}
+</div>
+
+<!-- Custom Confirm Modal -->
+<div class="modal-overlay" *ngIf="confirmData">
+  <div class="modal-content animate-fade-in">
+    <h3>Confirmation</h3>
+    <p>{{ confirmData.message }}</p>
+    <div
+      style="
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: flex-end;
+      "
+    >
+      <button class="btn-secondary" (click)="onConfirm(false)">Cancel</button>
+      <button class="btn-primary" (click)="onConfirm(true)">Confirm</button>
+    </div>
+  </div>
+</div>

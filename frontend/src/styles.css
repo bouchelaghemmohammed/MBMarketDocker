@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-light: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #60a5fa;
+  --accent: #f43f5e;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --border: rgba(59, 130, 246, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(12px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+}
+
+body {
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.2) 0px, transparent 60%),
+    radial-gradient(at 100% 100%, rgba(96, 165, 250, 0.2) 0px, transparent 60%),
+    linear-gradient(135deg, #f0f4f8 0%, #e0e7ff 100%);
+  background-attachment: fixed;
+}
+
+/* Glassmorphism utilities */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--primary);
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.input-control {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-content {
+  padding-top: 60px; /* matches fixed navbar height */
+  min-height: calc(100vh - 60px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Notification Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Grid Layouts */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* New Utilities */
+.badge {
+  background-color: var(--accent);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin-left: 5px;
+  vertical-align: super;
+}
+
+.cart-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.profile-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+.profile-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* Custom Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+}
+
+/* Navbar active state */
+.nav-link.active {
+  color: var(--primary);
+  font-weight: 600;
+  position: relative;
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Layout & Hover Enhancements */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.auth-container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.hover-scale {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-scale:hover {
+  transform: scale(1.15);
+}
+
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary, .btn-secondary {
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 8px 24px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  background: rgba(59, 130, 246, 0.08);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.checkout-grid {
+  display: grid;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .checkout-grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+@media (max-width: 899px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Global Utility Classes ===== */
+.w-100 {
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.page-header h2 {
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.empty-state {
+  padding: 64px 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  max-width: 420px;
+  margin: 0 auto 20px;
+}
+
+.success-msg {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}

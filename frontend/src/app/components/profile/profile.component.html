@@ -1,0 +1,89 @@
+<div class="profile-page animate-fade-in">
+  <!-- Avatar header -->
+  <div class="profile-hero glass-panel">
+    <div class="profile-avatar">
+      {{ currentUser?.email?.[0]?.toUpperCase() || "U" }}
+    </div>
+    <div class="profile-hero-info">
+      <h2 class="profile-name">
+        {{ currentUser?.username || currentUser?.email }}
+      </h2>
+      <p class="profile-subtitle">{{ currentUser?.email }}</p>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
+    <!-- Account Info -->
+    <div class="profile-card glass-panel">
+      <h3 class="section-title">Account Information</h3>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input
+          type="email"
+          name="email"
+          class="input-control"
+          [(ngModel)]="profileData.email"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Default Shipping Address</label>
+        <textarea
+          name="shippingAddress"
+          class="input-control"
+          [(ngModel)]="profileData.shippingAddress"
+          rows="3"
+          placeholder="Enter your full shipping address"
+        ></textarea>
+        <small class="field-hint">Automatically pre-filled at checkout.</small>
+      </div>
+    </div>
+
+    <!-- Password Change -->
+    <div class="profile-card glass-panel">
+      <h3 class="section-title">
+        Change Password <span class="optional-badge">optional</span>
+      </h3>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label>New Password</label>
+          <input
+            type="password"
+            name="password"
+            class="input-control"
+            [(ngModel)]="profileData.password"
+            placeholder="Leave blank to keep current"
+          />
+        </div>
+        <div class="input-group">
+          <label>Confirm New Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            class="input-control"
+            [(ngModel)]="profileData.confirmPassword"
+            placeholder="Repeat new password"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="btn-primary btn-save"
+      [disabled]="!profileForm.form.valid || loading"
+    >
+      {{ loading ? "Saving..." : "Save Changes" }}
+    </button>
+  </form>
+</div>

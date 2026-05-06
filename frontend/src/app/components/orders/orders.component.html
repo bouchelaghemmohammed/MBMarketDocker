@@ -1,0 +1,177 @@
+<div
+  class="container animate-fade-in"
+  style="padding-top: 40px; padding-bottom: 60px"
+>
+  <div class="page-header">
+    <div>
+      <h2>My Orders</h2>
+      <p class="sub-heading">Track your purchases and contact sellers</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading orders…</p>
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="empty-state glass-panel">
+    <div class="empty-icon">🛒</div>
+    <h3>No orders yet</h3>
+    <p>Head to the marketplace to start shopping!</p>
+    <a
+      routerLink="/products"
+      class="btn-primary"
+      style="display: inline-block; margin-top: 14px; text-decoration: none"
+    >
+      Browse Products
+    </a>
+  </div>
+
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+    <div
+      *ngFor="let order of orders"
+      class="order-card glass-panel animate-fade-in"
+    >
+      <!-- Header -->
+      <div class="order-header">
+        <div class="order-meta">
+          <span class="order-id"
+            >Order #{{ order._id.substring(order._id.length - 8) }}</span
+          >
+          <span class="order-date">{{
+            order.createdAt | date: "mediumDate"
+          }}</span>
+          <span class="buyer-tag" *ngIf="order.userId?.username">
+            👤 {{ order.userId.username || order.userId.email }}
+          </span>
+        </div>
+        <span class="status-badge" [ngClass]="'badge-' + order.status">
+          {{ statusLabel(order.status) }}
+        </span>
+      </div>
+
+      <!-- Mini Status Timeline -->
+      <div class="status-track">
+        <span
+          class="track-step"
+          [class.done]="
+            ['confirmed', 'shipped', 'delivered', 'received'].includes(
+              order.status
+            )
+          "
+          [class.cur]="order.status === 'pending'"
+          >Pending</span
+        >
+        <div
+          class="track-line"
+          [class.done]="
+            ['confirmed', 'shipped', 'delivered', 'received'].includes(
+              order.status
+            )
+          "
+        ></div>
+        <span
+          class="track-step"
+          [class.done]="
+            ['shipped', 'delivered', 'received'].includes(order.status)
+          "
+          [class.cur]="order.status === 'confirmed'"
+          >Confirmed</span
+        >
+        <div
+          class="track-line"
+          [class.done]="
+            ['shipped', 'delivered', 'received'].includes(order.status)
+          "
+        ></div>
+        <span
+          class="track-step"
+          [class.done]="['delivered', 'received'].includes(order.status)"
+          [class.cur]="order.status === 'shipped'"
+          >Shipped</span
+        >
+        <div
+          class="track-line"
+          [class.done]="['delivered', 'received'].includes(order.status)"
+        ></div>
+        <span
+          class="track-step"
+          [class.done]="order.status === 'received'"
+          [class.cur]="order.status === 'delivered'"
+          >Delivered</span
+        >
+        <div
+          class="track-line"
+          [class.done]="order.status === 'received'"
+        ></div>
+        <span
+          class="track-step"
+          [class.done]="order.status === 'received'"
+          [class.cur]="order.status === 'received'"
+          >Received</span
+        >
+      </div>
+
+      <!-- Items -->
+      <div class="order-body">
+        <div class="order-items">
+          <div *ngFor="let item of order.products" class="order-item">
+            <div class="item-info">
+              <span class="item-name" *ngIf="item.productId">{{
+                item.productId.name
+              }}</span>
+              <span class="item-name deleted" *ngIf="!item.productId"
+                >Product deleted</span
+              >
+              <span class="item-qty">× {{ item.quantity }}</span>
+              <span class="item-price" *ngIf="item.productId?.price">
+                {{ item.productId.price * item.quantity | price }}
+              </span>
+            </div>
+            <div class="seller-row" *ngIf="item.productId?.sellerId">
+              <span class="seller-label">
+                Sold by
+                <strong>{{
+                  item.productId.sellerId.username ||
+                    item.productId.sellerId.email
+                }}</strong>
+              </span>
+              <a
+                [routerLink]="['/chat']"
+                [queryParams]="{ user: item.productId.sellerId._id }"
+                class="btn-contact-seller"
+              >
+                💬 Contact Seller
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer row -->
+        <div class="order-footer">
+          <div class="order-total">
+            <span>Total (taxes incl.)</span>
+            <span class="total-amount">{{ order.totalAmount | price }}</span>
+          </div>
+
+          <!-- Buyer action: confirm receipt -->
+          <button
+            *ngIf="order.status === 'delivered'"
+            class="btn-received"
+            [disabled]="updatingOrderId === order._id"
+            (click)="markAsReceived(order)"
+          >
+            <span *ngIf="updatingOrderId !== order._id"
+              >✅ Mark as Received</span
+            >
+            <span *ngIf="updatingOrderId === order._id">Updating…</span>
+          </button>
+
+          <span *ngIf="order.status === 'received'" class="received-badge">
+            ✅ You confirmed receipt
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

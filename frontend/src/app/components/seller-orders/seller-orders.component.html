@@ -1,0 +1,189 @@
+<div
+  class="container animate-fade-in"
+  style="padding-top: 40px; padding-bottom: 60px"
+>
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2>Incoming Orders</h2>
+      <p class="sub-heading">Manage and track orders for your products</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading orders…</p>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!loading && orders.length === 0" class="empty-state glass-panel">
+    <div class="empty-icon">📭</div>
+    <h3>No orders yet</h3>
+    <p>When buyers purchase your products, their orders will appear here.</p>
+    <a
+      routerLink="/my-products"
+      class="btn-primary"
+      style="display: inline-block; margin-top: 14px; text-decoration: none"
+    >
+      Manage My Products
+    </a>
+  </div>
+
+  <!-- Orders List -->
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+    <div
+      *ngFor="let order of orders; trackBy: trackById"
+      class="order-card glass-panel animate-fade-in"
+    >
+      <!-- Card Header -->
+      <div class="order-header">
+        <div class="order-meta">
+          <span class="order-id"
+            >Order #{{ order._id.substring(order._id.length - 8) }}</span
+          >
+          <span class="order-date">{{
+            order.createdAt | date: "mediumDate"
+          }}</span>
+          <span class="buyer-chip">
+            👤
+            {{
+              order.userId?.username || order.userId?.email || "Unknown buyer"
+            }}
+          </span>
+        </div>
+        <span class="status-badge" [ngClass]="'badge-' + order.status">
+          {{ statusLabel(order.status) }}
+        </span>
+      </div>
+
+      <!-- Status Timeline -->
+      <div class="status-timeline">
+        <div
+          class="timeline-step"
+          [class.done]="isStepDone('pending', order.status)"
+          [class.active]="order.status === 'pending'"
+        >
+          <div class="step-dot"></div>
+          <span>Pending</span>
+        </div>
+        <div
+          class="timeline-line"
+          [class.done]="isStepDone('confirmed', order.status)"
+        ></div>
+        <div
+          class="timeline-step"
+          [class.done]="isStepDone('confirmed', order.status)"
+          [class.active]="order.status === 'confirmed'"
+        >
+          <div class="step-dot"></div>
+          <span>Confirmed</span>
+        </div>
+        <div
+          class="timeline-line"
+          [class.done]="isStepDone('shipped', order.status)"
+        ></div>
+        <div
+          class="timeline-step"
+          [class.done]="isStepDone('shipped', order.status)"
+          [class.active]="order.status === 'shipped'"
+        >
+          <div class="step-dot"></div>
+          <span>Shipped</span>
+        </div>
+        <div
+          class="timeline-line"
+          [class.done]="isStepDone('delivered', order.status)"
+        ></div>
+        <div
+          class="timeline-step"
+          [class.done]="isStepDone('delivered', order.status)"
+          [class.active]="order.status === 'delivered'"
+        >
+          <div class="step-dot"></div>
+          <span>Delivered</span>
+        </div>
+        <div
+          class="timeline-line"
+          [class.done]="order.status === 'received'"
+        ></div>
+        <div
+          class="timeline-step"
+          [class.done]="order.status === 'received'"
+          [class.active]="order.status === 'received'"
+        >
+          <div class="step-dot"></div>
+          <span>Received</span>
+        </div>
+      </div>
+
+      <!-- My Products in this order -->
+      <div class="order-body">
+        <div class="order-items">
+          <div *ngFor="let item of myItems(order)" class="order-item">
+            <div class="item-img">
+              <img
+                *ngIf="item.productId?.imageUrl"
+                [src]="item.productId.imageUrl"
+                [alt]="item.productId?.name"
+              />
+              <div *ngIf="!item.productId?.imageUrl" class="img-placeholder-sm">
+                BM
+              </div>
+            </div>
+            <div class="item-info">
+              <span class="item-name">{{
+                item.productId?.name || "Deleted product"
+              }}</span>
+              <span class="item-qty">× {{ item.quantity }}</span>
+            </div>
+            <span class="item-price" *ngIf="item.productId?.price">
+              {{ item.productId.price * item.quantity | price }}
+            </span>
+          </div>
+        </div>
+
+        <div class="order-footer">
+          <div class="order-total">
+            <span>Total</span>
+            <span class="total-amount">{{ order.totalAmount | price }}</span>
+          </div>
+
+          <!-- Action button (only if seller can still advance) -->
+          <button
+            *ngIf="nextStatusLabel[order.status]"
+            class="btn-action"
+            [class.btn-confirm]="order.status === 'pending'"
+            [class.btn-ship]="order.status === 'confirmed'"
+            [class.btn-deliver]="order.status === 'shipped'"
+            [disabled]="updatingOrderId === order._id"
+            (click)="advanceStatus(order)"
+          >
+            <span *ngIf="updatingOrderId !== order._id">{{
+              nextStatusLabel[order.status]
+            }}</span>
+            <span *ngIf="updatingOrderId === order._id">Updating…</span>
+          </button>
+
+          <!-- Final state badges -->
+          <span *ngIf="order.status === 'delivered'" class="awaiting-chip">
+            ⏳ Awaiting buyer confirmation
+          </span>
+          <span *ngIf="order.status === 'received'" class="received-chip">
+            ✅ Buyer confirmed receipt
+          </span>
+
+          <!-- Contact buyer -->
+          <a
+            *ngIf="order.userId?._id"
+            [routerLink]="['/chat']"
+            [queryParams]="{ user: order.userId._id }"
+            class="btn-contact"
+          >
+            💬 Contact Buyer
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
