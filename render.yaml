@@ -3,14 +3,15 @@ services:
     name: bmmarket-backend
     env: docker
     plan: free
-    rootDir: backend
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGO_URI
-        sync: false # Set this manually in the Render dashboard
+        sync: false
       - key: JWT_SECRET
-        sync: false # Set this manually in the Render dashboard
+        sync: false
       - key: JWT_EXPIRES_IN
         value: 1d
 
@@ -18,7 +19,8 @@ services:
     name: bmmarket-frontend
     env: docker
     plan: free
-    rootDir: frontend
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
     envVars:
       - key: NODE_ENV
         value: production
